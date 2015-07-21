@@ -5,8 +5,10 @@
 //  Created by MAEDAHAJIME on 2015/02/10.
 //
 //
+#include <time.h>
 
 #include "Overview.h"
+#include "Helper.h"
 
 Scene* Overview::createScene()
 {
@@ -35,16 +37,38 @@ bool Overview::init()
     // バックグランドカラー 第2引数は表示順
     this->addChild(background, 0);
     
-    // テーブル一覧ラベルを生成
-    auto label1 = Label::createWithSystemFont("テーブル一覧", "Arial", 60);
+    std::string dt = Helper::StrFtime(time(NULL), "%Y%m%d");
+//    // テーブル一覧ラベルを生成
+//    auto label1 = Label::createWithSystemFont(dt/*"テーブル一覧"*/, "Arial", 60);
+//    
+//    label1->setColor(Color3B::BLACK);
+//
+//    // ラベルの設置
+//    label1->setPosition(Vec2(window_size.width / 2 ,window_size.height - 80));
+//    
+//    // ラベルタイトルを追加
+//    this->addChild(label1,1);
     
-    label1->setColor(Color3B::BLACK);
-
-    // ラベルの設置
-    label1->setPosition(Vec2(window_size.width / 2 ,window_size.height - 80));
     
-    // ラベルタイトルを追加
-    this->addChild(label1,1);
+    auto editBoxSize = Size(window_size.width/2.5, 80);
+    
+    // top
+    cocos2d::ui::EditBox* _editName;
+    std::string pNormalSprite = "green_edit.png";
+    
+    _editName = ui::EditBox::create(editBoxSize, ui::Scale9Sprite::create(pNormalSprite));
+    _editName->setPosition(Vec2(window_size.width / 2 ,window_size.height - 80));
+    _editName->setFontName("Arial");
+    _editName->setFontSize(60);
+    _editName->setFontColor(Color3B::BLACK);
+    _editName->setPlaceHolder(dt.c_str());
+    _editName->setPlaceholderFontColor(Color3B::BLACK);
+    _editName->setMaxLength(8);
+    _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
+    _editName->setDelegate(this);
+    this->addChild(_editName);
+    
+    
 
     
     // テーブルのヘッダー空間
@@ -59,7 +83,7 @@ bool Overview::init()
     
     //追加
     tableView->setDelegate(this);
-    addChild(tableView);
+    this->addChild(tableView,2);
     tableView->reloadData();
     
     return true;
@@ -135,4 +159,26 @@ ssize_t Overview::numberOfCellsInTableView(TableView *table){
 // セルがタッチされた時のcallback
 void Overview::tableCellTouched(TableView* table, TableViewCell* cell){
     CCLOG("%ziのセルがタッチされました", cell->getIdx());
+}
+
+
+
+void Overview::editBoxEditingDidBegin(cocos2d::ui::EditBox *editBox){
+    CCLOG("editBoxEditingDidBegin");
+}
+
+void Overview::editBoxEditingDidEnd(cocos2d::ui::EditBox *editBox){
+    CCLOG("editBoxEditingDidEnd");
+}
+
+void Overview::editBoxReturn(cocos2d::ui::EditBox *editBox){
+    CCLOG("editBoxReturn: %s", editBox->getText());
+}
+
+void Overview::editBoxTextChanged(cocos2d::ui::EditBox *editBox, const std::string &text){
+    char c = *text.rbegin();
+    if (not(c>='0' and c <= '9')){
+        editBox->setText(text.substr(0, text.length() - 1).c_str());
+    }
+    CCLOG("editBoxTextChanged: %s", text.c_str());
 }

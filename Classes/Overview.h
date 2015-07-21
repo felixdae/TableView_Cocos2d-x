@@ -18,7 +18,8 @@ using namespace extension;
 
 class Overview : public Layer,
 public TableViewDataSource,
-public TableViewDelegate
+public TableViewDelegate,
+public cocos2d::ui::EditBoxDelegate
 {
     Size window_size;
 public:
@@ -37,6 +38,11 @@ public:
     virtual void scrollViewDidScroll(ScrollView* view){};
     virtual void scrollViewDidZoom(ScrollView* view){};
     
+    
+    virtual void editBoxEditingDidBegin(cocos2d::ui::EditBox* editBox);
+    virtual void editBoxEditingDidEnd(cocos2d::ui::EditBox* editBox);
+    virtual void editBoxTextChanged(cocos2d::ui::EditBox* editBox, const std::string& text);
+    virtual void editBoxReturn(cocos2d::ui::EditBox* editBox);
     CREATE_FUNC(Overview);
     
 };
