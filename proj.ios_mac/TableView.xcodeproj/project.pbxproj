@@ -59,8 +59,11 @@
 		521A8E6519F0C34300D177D7 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521A8E6319F0C34300D177D7 /* Default-736h@3x.png */; };
 		521A8EA919F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		521A8EAA19F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
+		7B14B1201B5F7E1A0064BE7A /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B14B11F1B5F7E1A0064BE7A /* libsqlite3.dylib */; };
+		7B582CED1B60C56B009A586D /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B582CEB1B60C56B009A586D /* Model.cpp */; };
 		7B88D5891B5DF54F009E53C1 /* Helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B88D5871B5DF54F009E53C1 /* Helper.cpp */; };
 		7B88D58B1B5E2E67009E53C1 /* green_edit.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B88D58A1B5E2E67009E53C1 /* green_edit.png */; };
+		7B88D58E1B5E4887009E53C1 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B88D58C1B5E4887009E53C1 /* Data.cpp */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -152,9 +155,14 @@
 		521A8E6219F0C34300D177D7 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x.png"; sourceTree = "<group>"; };
 		521A8E6319F0C34300D177D7 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x.png"; sourceTree = "<group>"; };
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
+		7B14B11F1B5F7E1A0064BE7A /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
+		7B582CEB1B60C56B009A586D /* Model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Model.cpp; sourceTree = "<group>"; };
+		7B582CEC1B60C56B009A586D /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		7B88D5871B5DF54F009E53C1 /* Helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Helper.cpp; sourceTree = "<group>"; };
 		7B88D5881B5DF54F009E53C1 /* Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helper.h; sourceTree = "<group>"; };
 		7B88D58A1B5E2E67009E53C1 /* green_edit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_edit.png; sourceTree = "<group>"; };
+		7B88D58C1B5E4887009E53C1 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
+		7B88D58D1B5E4887009E53C1 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -169,6 +177,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B14B1201B5F7E1A0064BE7A /* libsqlite3.dylib in Frameworks */,
 				1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */,
 				D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -254,6 +263,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7B14B11F1B5F7E1A0064BE7A /* libsqlite3.dylib */,
 				D6B0611A1803AB670077942B /* CoreMotion.framework */,
 				503AE11A17EB9C5A00D1A890 /* IOKit.framework */,
 				503AE11117EB99EE00D1A890 /* libcurl.dylib */,
@@ -297,6 +307,10 @@
 				42C8D3281A8A10FB00CE6DDE /* Overview.h */,
 				7B88D5871B5DF54F009E53C1 /* Helper.cpp */,
 				7B88D5881B5DF54F009E53C1 /* Helper.h */,
+				7B88D58C1B5E4887009E53C1 /* Data.cpp */,
+				7B88D58D1B5E4887009E53C1 /* Data.h */,
+				7B582CEB1B60C56B009A586D /* Model.cpp */,
+				7B582CEC1B60C56B009A586D /* Model.h */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -499,6 +513,8 @@
 			files = (
 				42C8D3291A8A10FB00CE6DDE /* Overview.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
+				7B88D58E1B5E4887009E53C1 /* Data.cpp in Sources */,
+				7B582CED1B60C56B009A586D /* Model.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,

@@ -44,6 +44,8 @@ public:
     virtual void editBoxTextChanged(cocos2d::ui::EditBox* editBox, const std::string& text);
     virtual void editBoxReturn(cocos2d::ui::EditBox* editBox);
     CREATE_FUNC(Overview);
+private:
+    std::string datetime_;
     
 };
 
