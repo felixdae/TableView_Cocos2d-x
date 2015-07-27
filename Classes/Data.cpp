@@ -15,7 +15,19 @@ Data::Data(const std::string &path)
 }
 
 Data::~Data(){
-    
+    this->closeDb();
+}
+
+int32_t Data::init(){
+    int rc = this->openDb();
+    if (rc != 0){
+        return rc;
+    }
+    rc = this->createTable();
+    if (rc != 0){
+        return rc;
+    }
+    return 0;
 }
 
 int32_t Data::openDb(){
@@ -33,6 +45,17 @@ int32_t Data::openDb(){
 
 int32_t Data::closeDb(){
     return sqlite3_close(this->pdb_);
+}
+
+int32_t Data::createTable(){
+    std::string sql;
+    sql = "create table if not exists "+this->tableName_+"(issue text primary key, num int)";
+    
+    int res = sqlite3_exec(this->pdb_, sql.c_str(), NULL, NULL, NULL);
+    if (res != SQLITE_OK){
+        return -1;
+    }
+    return 0;
 }
 
 int32_t Data::querySingle(const std::string &issue){
@@ -62,7 +85,7 @@ int32_t Data::querySingle(const std::string &issue){
 std::map<std::string, int32_t> Data::queryOneday(const std::string &date){
     char **re;//查询结果
     int r,c;//行、列
-    std::string sql = "select num from " + this->tableName_ + " where issue like " + date + "%";
+    std::string sql = "select num from " + this->tableName_ + " where issue like " + date + "%  order by issue";
     sqlite3_get_table(this->pdb_, sql.c_str(), &re,&r,&c,NULL);//1
     //    log("row is %d,column is %d",r,c);
     if (r < 1){
@@ -102,3 +125,8 @@ int32_t Data::addSingle(const std::string &issue, int32_t num){
     return 0;
 }
 
+int32_t Data::updateRecord(const std::string &issue, int32_t num){
+    this->deleteSinge(issue);
+    this->addSingle(issue, num);
+    return 0;
+}

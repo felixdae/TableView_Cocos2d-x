@@ -40,6 +40,16 @@ bool Overview::init()
     
     std::string dt = Helper::StrFtime(time(NULL), "%Y%m%d");
     this->datetime_ = dt;
+    this->db_path_ = FileUtils::getInstance()->getWritablePath()+"save.db";//2
+    this->reloadData();
+//    this->ds_ = new Model(this->db_path_);
+//    if (0 == this->ds_->init(this->datetime_)){
+//        this->allCells_ = this->ds_->getAllCells();
+//        this->data_ok_ = true;
+//    }
+
+//    CCLOG("%d", this->allCells_.size());
+
 //    // テーブル一覧ラベルを生成
 //    auto label1 = Label::createWithSystemFont(dt/*"テーブル一覧"*/, "Arial", 60);
 //    
@@ -86,6 +96,7 @@ bool Overview::init()
     
     //追加
     tableView->setDelegate(this);
+    this->tv_ = tableView;
     this->addChild(tableView,2);
     tableView->reloadData();
     
@@ -144,27 +155,29 @@ TableViewCell* Overview::tableCellAtIndex(TableView *table, ssize_t idx){
     label_1->setColor(Color3B::BLACK);
     cell->addChild(label_1);
     
+    if (not this->data_ok_){
+        return cell;
+    }
     // テキスト部分
-    bool odd = false;
+//    if (this->allCells_.count(id) == 0){
+//        CCLOG("no data for %s", id.c_str());
+//    }
+    std::vector<Model::cellValue> cv = this->allCells_[id];
     float orix = 280;
     for (int i = 0; i < 5; i++) {
         if (idx%2 == 0){
             if (i%2 == 0){
                 text = "单";
-                odd = true;
             }
             else{
                 text = "双";
-                odd = false;
             }
         }else{
             if (i%2 == 0){
                 text = "双";
-                odd = false;
             }
             else{
                 text = "单";
-                odd = true;
             }
         }
         auto *label_2 = LabelTTF::create(text.c_str(), "Arial", 35);
@@ -182,14 +195,20 @@ TableViewCell* Overview::tableCellAtIndex(TableView *table, ssize_t idx){
         editName->setFontName("Arial");
         editName->setFontSize(40);
         editName->setPlaceholderFontSize(60);
-        editName->setPlaceholderFontColor(Color3B::BLACK);
-        editName->setFontColor(Color3B::BLACK);
+        auto font_color = Color3B::BLACK;
+        if (cv[i].fontColor == 1){
+            font_color = Color3B::RED;
+        }else if(cv[i].fontColor == 2){
+            font_color = Color3B::GREEN;
+        }
+        editName->setPlaceholderFontColor(font_color);
+        editName->setFontColor(font_color);
         
-        int ball = rand()%10;
+//        int ball = rand()%10;
 
         
         editName->setMaxLength(1);
-        editName->setPlaceHolder(StringUtils::format("%d", ball).c_str());
+        editName->setPlaceHolder(StringUtils::format("%d", cv[i].num).c_str());
         editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
         editName->setAnchorPoint(Point(0, 0));
         editName->setDelegate(this);
@@ -200,19 +219,25 @@ TableViewCell* Overview::tableCellAtIndex(TableView *table, ssize_t idx){
         Sprite* bg2 = Sprite::create();
         bg2->setAnchorPoint(Point(0, 0));
         bg2->setTextureRect(Rect(0, 0, 40, 40));
-        if ((odd and ball%2) or (!odd and !(ball%2)))
-        {
-            bg2->setColor(Color3B::RED);
-        }else{
-            bg2->setColor(Color3B::GREEN);
+        auto bg_color = Color3B::WHITE;
+        if (cv[i].bgColor == 1){
+            bg_color = Color3B::RED;
+        }else if (cv[i].bgColor == 2){
+            bg_color = Color3B::GREEN;
         }
-        bg2->setTag(100);
+        bg2->setColor(bg_color);
+
+//        if ((odd and ball%2) or (!odd and !(ball%2)))
+//        {
+//            bg2->setColor(Color3B::RED);
+//        }else{
+//            bg2->setColor(Color3B::GREEN);
+//        }
+//        bg2->setTag(100);
         bg2->setPosition(Point(orix + 40, 0));
 
         cell->addChild(bg2);
         bg2->addChild(editName);
-        
-        
         
         orix += 90;
     }
@@ -227,7 +252,7 @@ ssize_t Overview::numberOfCellsInTableView(TableView *table){
 
 // セルがタッチされた時のcallback
 void Overview::tableCellTouched(TableView* table, TableViewCell* cell){
-    CCLOG("%ziのセルがタッチされました", cell->getIdx());
+//    CCLOG("%ziのセルがタッチされました", cell->getIdx());
 }
 
 
@@ -242,14 +267,46 @@ void Overview::editBoxEditingDidEnd(cocos2d::ui::EditBox *editBox){
 
 void Overview::editBoxReturn(cocos2d::ui::EditBox *editBox){
     CCLOG("editBoxReturn: %s, %d", editBox->getText(), editBox->getTag());
+    if (editBox->getTag() == 9999){
+        this->datetime_ = editBox->getText();//合法性检查
+        this->reloadData();
+        for (int i = 0; i < 130; ++i) {
+            this->tableCellAtIndex(this->tv_, i);
+            this->tv_->updateCellAtIndex(i);
+        }
+    }else{
+        int idx = editBox->getTag()/10;
+        int col = editBox->getTag()%10;
+        std::string id = StringUtils::format("%s%003zd", this->datetime_.c_str(), idx + 1);
+        
+//        this->allCells_[id][col]. = atoi(editBox->getText());
+        this->tableCellAtIndex(this->tv_, idx);
+        this->tv_->updateCellAtIndex(idx);
+
+    }
+//    this->tv_->updateCellAtIndex();
 }
 
 void Overview::editBoxTextChanged(cocos2d::ui::EditBox *editBox, const std::string &text){
     CCLOG("editBoxTextChanged: %s, %d", text.c_str(), editBox->getTag());
-    if (editBox->getTag() == 9999){
-        char c = *text.rbegin();
-        if (not(c >= '0' and c <= '9')){
-            editBox->setText(text.substr(0, text.length() - 1).c_str());
-        }
+    //    if (editBox->getTag() == 9999){
+    char c = *text.rbegin();
+    if (not(c >= '0' and c <= '9')){
+        editBox->setText(text.substr(0, text.length() - 1).c_str());
+    }
+    //    }
+}
+
+void Overview::reloadData(){
+    if (!this->ds_){
+        delete this->ds_;
+        this->ds_ = nullptr;
+    }
+    this->data_ok_ = false;
+    this->allCells_.clear();
+    this->ds_ = new Model(this->db_path_);
+    if (0 == this->ds_->init(this->datetime_)){
+        this->allCells_ = this->ds_->getAllCells();
+        this->data_ok_ = true;
     }
 }

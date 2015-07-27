@@ -14,11 +14,14 @@ Model::Model(const std::string& db)
 }
 
 Model::~Model(){
-    
+    delete this->pd_;
 }
 
 int32_t Model::init(const std::string &date){
     this->date_ = date;
+    if (this->pd_->init() != 0){
+        return -1;
+    }
     this->tableData_ = this->pd_->queryOneday(date);
     this->calcCellValue();
     return 0;
@@ -39,7 +42,7 @@ void Model::calcCellValue(){
     for (int i = 0; i < 130; i++) {
 //        char buf[10];
 //        snprintf(buf, 10, "%003d", i);
-        std::string issue = this->getIssue(i);
+        std::string issue = this->getIssue(i + 1);
         if (this->tableData_.count(issue) != 1){
             Model::cellValue cv;
             cv.num = 0;
@@ -67,12 +70,13 @@ void Model::calcCellValue(){
                         cv.fontColor = 1;
                     }
                 }
+                this->allCells_[issue].insert(this->allCells_[issue].begin(), cv);
             }
         }
     }
     for (int i = 0; i < 5; i++){
         int cc = 0;
-        for (int j = 0; j < 130; j++) {
+        for (int j = 1; j <= 130; j++) {
             if (this->allCells_[this->getIssue(j)][i].fontColor == 1){
                 cc++;
                 if (cc == 4){

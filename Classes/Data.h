@@ -18,6 +18,8 @@ public:
     Data(const std::string &path);
     virtual ~Data();
     
+    int32_t init();
+    
     //db operation
     int32_t querySingle(const std::string& issue);
     std::map<std::string, int32_t> queryOneday(const std::string& date);
@@ -27,6 +29,7 @@ private:
     int32_t closeDb();
     int32_t addSingle(const std::string& issue, int32_t num);
     int32_t deleteSinge(const std::string& issue);
+    int32_t createTable();
 private:
     sqlite3 *pdb_;
     std::string path_;

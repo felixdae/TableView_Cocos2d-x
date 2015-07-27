@@ -13,6 +13,8 @@
 #include "cocos2d.h"
 #include <extensions/cocos-ext.h>
 
+#include "Model.h"
+
 USING_NS_CC;
 using namespace extension;
 
@@ -45,8 +47,14 @@ public:
     virtual void editBoxReturn(cocos2d::ui::EditBox* editBox);
     CREATE_FUNC(Overview);
 private:
+    std::string db_path_;
     std::string datetime_;
+    TableView* tv_;
     
+    Model *ds_;
+    std::map<std::string, std::vector<Model::cellValue>> allCells_;
+    bool data_ok_ = false;
+    void reloadData();
 };
 
 #endif /* defined(__TableView__Overview__) */
